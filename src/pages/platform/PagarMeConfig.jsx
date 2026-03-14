@@ -44,16 +44,37 @@ export default function PagarMeConfig() {
   }, [])
 
   const fetchConfig = async () => {
-    try {
-      const userId = localStorage.getItem('userId') || 'default-user'
-      const response = await fetch(`${appConfig.apiUrl}/api/integrations/pagarme?userId=${userId}`)
+  try {
+    const userId = localStorage.getItem('userId') || 'default-user'
+    const url = `${appConfig.apiUrl}/api/integrations/pagarme?userId=${userId}`
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+    console.log('🔍 Buscando configuração da Pagar.me:', url)
+
+    const response = await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json'
       }
+    })
 
-      const data = await response.json()
+    console.log('📥 Resposta do servidor:', response.status)
 
+    if (!response.ok) {
+      console.warn(`⚠️ Backend retornou status ${response.status}`)
+      // Se for 404, significa que ainda não tem dados salvos - isso é normal
+      if (response.status === 404) {
+        console.log('ℹ️ Nenhuma configuração encontrada (primeira vez)')
+        return
+      }
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const data = await response.json()
+    console.log('✅ Dados recebidos do backend:', data)
+
+    // Só atualiza se recebeu dados válidos
+    if (data && typeof data === 'object') {
       setConfig({
         publicKey: data.publicKey || '',
         privateKey: data.privateKey || '',
@@ -65,10 +86,14 @@ export default function PagarMeConfig() {
 
       setCredentialsLocked(data.credentialsLocked || false)
       setSplitLocked(data.splitLocked || false)
-    } catch (error) {
-      console.error('Erro ao carregar configuração:', error)
+
+      console.log('✅ Estado atualizado com os dados do backend')
     }
+  } catch (error) {
+    console.error('❌ Erro ao carregar configuração:', error)
   }
+}
+
 
   const handleSave = async () => {
     setSaving(true)
