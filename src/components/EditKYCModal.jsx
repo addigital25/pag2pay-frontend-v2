@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { formatCPF, formatCNPJ, formatPhone, formatCEP } from '../utils/formatters'
 
 export default function EditKYCModal({ isOpen, onClose, user, onSave }) {
   const [formData, setFormData] = useState({
@@ -64,7 +65,7 @@ export default function EditKYCModal({ isOpen, onClose, user, onSave }) {
 
     try {
       // Chamar API para salvar dados KYC
-      const response = await fetch(`https://pag2pay-backend01-production.up.railway.app/api/platform/users/${user.id}/edit-kyc`, {
+      const response = await fetch(`http://localhost:3001/api/platform/users/${user.id}/edit-kyc`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -134,8 +135,13 @@ export default function EditKYCModal({ isOpen, onClose, user, onSave }) {
                     name="cpf"
                     value={formData.cpf}
                     onChange={handleChange}
+                    onBlur={(e) => {
+                      const formatted = formatCPF(e.target.value)
+                      setFormData(prev => ({ ...prev, cpf: formatted }))
+                    }}
                     required
                     placeholder="000.000.000-00"
+                    maxLength="14"
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -149,8 +155,13 @@ export default function EditKYCModal({ isOpen, onClose, user, onSave }) {
                     name="cnpj"
                     value={formData.cnpj}
                     onChange={handleChange}
+                    onBlur={(e) => {
+                      const formatted = formatCNPJ(e.target.value)
+                      setFormData(prev => ({ ...prev, cnpj: formatted }))
+                    }}
                     required
                     placeholder="00.000.000/0000-00"
+                    maxLength="18"
                     className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -179,8 +190,13 @@ export default function EditKYCModal({ isOpen, onClose, user, onSave }) {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
+                  onBlur={(e) => {
+                    const formatted = formatPhone(e.target.value)
+                    setFormData(prev => ({ ...prev, phone: formatted }))
+                  }}
                   required
                   placeholder="(00) 00000-0000"
+                  maxLength="15"
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
@@ -200,8 +216,13 @@ export default function EditKYCModal({ isOpen, onClose, user, onSave }) {
                   name="cep"
                   value={formData.cep}
                   onChange={handleChange}
+                  onBlur={(e) => {
+                    const formatted = formatCEP(e.target.value)
+                    setFormData(prev => ({ ...prev, cep: formatted }))
+                  }}
                   required
                   placeholder="00000-000"
+                  maxLength="9"
                   className="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
