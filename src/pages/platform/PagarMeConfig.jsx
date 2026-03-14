@@ -45,7 +45,7 @@ export default function PagarMeConfig() {
   const fetchConfig = async () => {
     try {
       const userId = localStorage.getItem('userId') || 'default-user'
-      const response = await fetch(`https://pag2pay-backend01-production.up.railway.app/api/integrations/pagarme?userId=${userId}`)
+      const response = await fetch(`http://localhost:3001/api/integrations/pagarme?userId=${userId}`)
       const data = await response.json()
 
       setConfig({
@@ -70,7 +70,7 @@ export default function PagarMeConfig() {
 
     try {
       // A FAZER: Salvar no backend
-      // await fetch('https://pag2pay-backend01-production.up.railway.app/api/integrations/pagarme', {
+      // await fetch('http://localhost:3001/api/integrations/pagarme', {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(config)
@@ -122,7 +122,7 @@ export default function PagarMeConfig() {
     try {
       const userId = localStorage.getItem('userId') || 'default-user'
 
-      const response = await fetch('https://pag2pay-backend01-production.up.railway.app/api/integrations/pagarme', {
+      const response = await fetch('http://localhost:3001/api/integrations/pagarme', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -172,16 +172,53 @@ export default function PagarMeConfig() {
       title: 'Confirmar Exclusão',
       message: 'Tem certeza que deseja excluir as credenciais? Você precisará configurá-las novamente.',
       type: 'warning',
-      onConfirm: () => {
-        setConfig({ ...config, publicKey: '', privateKey: '' })
-        setCredentialsLocked(false)
-        setAlertModal({
-          isOpen: true,
-          title: 'Sucesso',
-          message: 'Credenciais excluídas com sucesso!',
-          type: 'success',
-          onConfirm: null
-        })
+      onConfirm: async () => {
+        try {
+          const userId = localStorage.getItem('userId') || 'default-user'
+
+          // Salvar no backend com credenciais vazias
+          const response = await fetch('http://localhost:3001/api/integrations/pagarme', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId,
+              publicKey: '',
+              privateKey: '',
+              webhookUrl: config.webhookUrl,
+              splitReceiverId: config.splitReceiverId,
+              splitRate: config.splitRate,
+              splitAnticipationRate: config.splitAnticipationRate,
+              credentialsLocked: false,
+              splitLocked: splitLocked,
+              enabled: false
+            })
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            setConfig({ ...config, publicKey: '', privateKey: '' })
+            setCredentialsLocked(false)
+            setAlertModal({
+              isOpen: true,
+              title: 'Sucesso',
+              message: 'Credenciais excluídas com sucesso!',
+              type: 'success',
+              onConfirm: null
+            })
+          } else {
+            throw new Error('Erro ao excluir credenciais')
+          }
+        } catch (error) {
+          console.error('Erro ao excluir credenciais:', error)
+          setAlertModal({
+            isOpen: true,
+            title: 'Erro',
+            message: 'Erro ao excluir credenciais. Tente novamente.',
+            type: 'error',
+            onConfirm: null
+          })
+        }
       }
     })
   }
@@ -204,7 +241,7 @@ export default function PagarMeConfig() {
     try {
       const userId = localStorage.getItem('userId') || 'default-user'
 
-      const response = await fetch('https://pag2pay-backend01-production.up.railway.app/api/integrations/pagarme', {
+      const response = await fetch('http://localhost:3001/api/integrations/pagarme', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -254,16 +291,53 @@ export default function PagarMeConfig() {
       title: 'Confirmar Exclusão',
       message: 'Tem certeza que deseja excluir as configurações de Split? Você precisará configurá-las novamente.',
       type: 'warning',
-      onConfirm: () => {
-        setConfig({ ...config, splitReceiverId: '', splitRate: '3.67', splitAnticipationRate: '' })
-        setSplitLocked(false)
-        setAlertModal({
-          isOpen: true,
-          title: 'Sucesso',
-          message: 'Configurações de Split excluídas com sucesso!',
-          type: 'success',
-          onConfirm: null
-        })
+      onConfirm: async () => {
+        try {
+          const userId = localStorage.getItem('userId') || 'default-user'
+
+          // Salvar no backend com configurações de split vazias
+          const response = await fetch('http://localhost:3001/api/integrations/pagarme', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId,
+              publicKey: config.publicKey,
+              privateKey: config.privateKey,
+              webhookUrl: config.webhookUrl,
+              splitReceiverId: '',
+              splitRate: '3.67',
+              splitAnticipationRate: '',
+              credentialsLocked: credentialsLocked,
+              splitLocked: false,
+              enabled: credentialsLocked // Mantém enabled se as credenciais ainda existem
+            })
+          })
+
+          const data = await response.json()
+
+          if (data.success) {
+            setConfig({ ...config, splitReceiverId: '', splitRate: '3.67', splitAnticipationRate: '' })
+            setSplitLocked(false)
+            setAlertModal({
+              isOpen: true,
+              title: 'Sucesso',
+              message: 'Configurações de Split excluídas com sucesso!',
+              type: 'success',
+              onConfirm: null
+            })
+          } else {
+            throw new Error('Erro ao excluir configurações de split')
+          }
+        } catch (error) {
+          console.error('Erro ao excluir split:', error)
+          setAlertModal({
+            isOpen: true,
+            title: 'Erro',
+            message: 'Erro ao excluir configurações de Split. Tente novamente.',
+            type: 'error',
+            onConfirm: null
+          })
+        }
       }
     })
   }
