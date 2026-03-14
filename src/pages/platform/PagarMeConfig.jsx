@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PlatformLayout from '../../components/PlatformLayout'
 import AlertModal from '../../components/AlertModal'
-import config from '../../config'
+import appConfig from '../../config'
 
 export default function PagarMeConfig() {
   const navigate = useNavigate()
@@ -46,7 +46,7 @@ export default function PagarMeConfig() {
   const fetchConfig = async () => {
     try {
       const userId = localStorage.getItem('userId') || 'default-user'
-      const response = await fetch(`${config.apiUrl}/api/integrations/pagarme?userId=${userId}`)
+      const response = await fetch(`${appConfig.apiUrl}/api/integrations/pagarme?userId=${userId}`)
       const data = await response.json()
 
       setConfig({
