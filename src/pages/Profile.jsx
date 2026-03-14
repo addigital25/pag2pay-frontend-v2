@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import AdminLayout from '../components/AdminLayout'
+import { formatCPF, formatPhone, formatCEP } from '../utils/formatters'
 
 export default function Profile() {
   const { user, updateUser } = useAuth()
@@ -69,7 +70,7 @@ export default function Profile() {
     setSaving(true)
 
     try {
-      const response = await fetch(`https://pag2pay-backend01-production.up.railway.app/api/users/${user.id}`, {
+      const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -91,29 +92,7 @@ export default function Profile() {
     }
   }
 
-  const formatCPF = (value) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d)/, '$1.$2')
-      .replace(/(\d{3})(\d{1,2})$/, '$1-$2')
-      .slice(0, 14)
-  }
-
-  const formatPhone = (value) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{2})(\d)/, '($1) $2')
-      .replace(/(\d{5})(\d)/, '$1-$2')
-      .slice(0, 15)
-  }
-
-  const formatZipCode = (value) => {
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{5})(\d)/, '$1-$2')
-      .slice(0, 9)
-  }
+  // Funções removidas - agora importadas de utils/formatters.js
 
   if (loading) {
     return (
@@ -183,11 +162,13 @@ export default function Profile() {
                 type="tel"
                 name="phone"
                 value={formData.phone}
-                onChange={(e) => {
+                onChange={handleChange}
+                onBlur={(e) => {
                   const formatted = formatPhone(e.target.value)
                   setFormData(prev => ({ ...prev, phone: formatted }))
                 }}
                 placeholder="(11) 98765-4321"
+                maxLength="15"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
@@ -200,11 +181,13 @@ export default function Profile() {
                 type="text"
                 name="cpf"
                 value={formData.cpf}
-                onChange={(e) => {
+                onChange={handleChange}
+                onBlur={(e) => {
                   const formatted = formatCPF(e.target.value)
                   setFormData(prev => ({ ...prev, cpf: formatted }))
                 }}
                 placeholder="000.000.000-00"
+                maxLength="14"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
@@ -239,14 +222,16 @@ export default function Profile() {
                 type="text"
                 name="address.zipCode"
                 value={formData.address.zipCode}
-                onChange={(e) => {
-                  const formatted = formatZipCode(e.target.value)
+                onChange={handleChange}
+                onBlur={(e) => {
+                  const formatted = formatCEP(e.target.value)
                   setFormData(prev => ({
                     ...prev,
                     address: { ...prev.address, zipCode: formatted }
                   }))
                 }}
                 placeholder="00000-000"
+                maxLength="9"
                 className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500"
               />
             </div>
