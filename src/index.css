@@ -40,3 +40,44 @@ body {
 .animate-shimmer {
   animation: shimmer 2s infinite;
 }
+
+/* Transição suave entre páginas - Remove o "piscar" */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.page-transition {
+  animation: fade-in 0.2s ease-in;
+}
+
+/* Skeleton loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Previne flash branco ao trocar de página */
+main {
+  min-height: 100vh;
+  background-color: inherit;
+}
+
+/* Suaviza transições de layout */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
