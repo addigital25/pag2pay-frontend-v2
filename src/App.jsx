@@ -58,6 +58,8 @@ import Achievements from './pages/Achievements'
 import UserAchievements from './pages/UserAchievements'
 import TermsOfUse from './pages/TermsOfUse'
 import PrivacyPolicy from './pages/PrivacyPolicy'
+import PlatformPageLoader from './components/PlatformPageLoader'
+import PageLoader from './components/PageLoader'
 
 // Componente para proteger rotas de usuário
 function PrivateRoute({ children }) {
@@ -108,11 +110,7 @@ function PlatformRoute({ children }) {
   }
 
   return (
-    <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center bg-slate-900">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-      </div>
-    }>
+    <Suspense fallback={<PlatformPageLoader />}>
       {children}
     </Suspense>
   )
