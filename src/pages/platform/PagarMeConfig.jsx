@@ -144,6 +144,8 @@ export default function PagarMeConfig() {
       if (data.success) {
         setCredentialsLocked(true)
         setShowConfirmDialog(false)
+        // Recarrega os dados do backend para garantir sincronização
+        await fetchConfig()
         setAlertModal({
           isOpen: true,
           title: 'Sucesso',
@@ -197,8 +199,9 @@ export default function PagarMeConfig() {
           const data = await response.json()
 
           if (data.success) {
-            setConfig({ ...config, publicKey: '', privateKey: '' })
             setCredentialsLocked(false)
+            // Recarrega os dados do backend para garantir sincronização
+            await fetchConfig()
             setAlertModal({
               isOpen: true,
               title: 'Sucesso',
@@ -263,6 +266,8 @@ export default function PagarMeConfig() {
       if (data.success) {
         setSplitLocked(true)
         setShowSplitConfirmDialog(false)
+        // Recarrega os dados do backend para garantir sincronização
+        await fetchConfig()
         setAlertModal({
           isOpen: true,
           title: 'Sucesso',
@@ -316,8 +321,9 @@ export default function PagarMeConfig() {
           const data = await response.json()
 
           if (data.success) {
-            setConfig({ ...config, splitReceiverId: '', splitRate: '3.67', splitAnticipationRate: '' })
             setSplitLocked(false)
+            // Recarrega os dados do backend para garantir sincronização
+            await fetchConfig()
             setAlertModal({
               isOpen: true,
               title: 'Sucesso',
