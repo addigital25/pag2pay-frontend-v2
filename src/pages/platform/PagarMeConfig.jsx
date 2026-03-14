@@ -47,6 +47,11 @@ export default function PagarMeConfig() {
     try {
       const userId = localStorage.getItem('userId') || 'default-user'
       const response = await fetch(`${appConfig.apiUrl}/api/integrations/pagarme?userId=${userId}`)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
       const data = await response.json()
 
       setConfig({
@@ -71,7 +76,7 @@ export default function PagarMeConfig() {
 
     try {
       // A FAZER: Salvar no backend
-      // await fetch(`${config.apiUrl}/api/integrations/pagarme`, {
+      // await fetch(`${appConfig.apiUrl}/api/integrations/pagarme`, {
       //   method: 'POST',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify(config)
@@ -123,7 +128,7 @@ export default function PagarMeConfig() {
     try {
       const userId = localStorage.getItem('userId') || 'default-user'
 
-      const response = await fetch(`${config.apiUrl}/api/integrations/pagarme`, {
+      const response = await fetch(`${appConfig.apiUrl}/api/integrations/pagarme`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -139,6 +144,10 @@ export default function PagarMeConfig() {
           enabled: true
         })
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
 
       const data = await response.json()
 
@@ -180,7 +189,7 @@ export default function PagarMeConfig() {
           const userId = localStorage.getItem('userId') || 'default-user'
 
           // Salvar no backend com credenciais vazias
-          const response = await fetch(`${config.apiUrl}/api/integrations/pagarme`, {
+          const response = await fetch(`${appConfig.apiUrl}/api/integrations/pagarme`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -196,6 +205,10 @@ export default function PagarMeConfig() {
               enabled: false
             })
           })
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
 
           const data = await response.json()
 
@@ -245,7 +258,7 @@ export default function PagarMeConfig() {
     try {
       const userId = localStorage.getItem('userId') || 'default-user'
 
-      const response = await fetch(`${config.apiUrl}/api/integrations/pagarme`, {
+      const response = await fetch(`${appConfig.apiUrl}/api/integrations/pagarme`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -261,6 +274,10 @@ export default function PagarMeConfig() {
           enabled: true
         })
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
 
       const data = await response.json()
 
@@ -302,7 +319,7 @@ export default function PagarMeConfig() {
           const userId = localStorage.getItem('userId') || 'default-user'
 
           // Salvar no backend com configurações de split vazias
-          const response = await fetch(`${config.apiUrl}/api/integrations/pagarme`, {
+          const response = await fetch(`${appConfig.apiUrl}/api/integrations/pagarme`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
@@ -318,6 +335,10 @@ export default function PagarMeConfig() {
               enabled: credentialsLocked // Mantém enabled se as credenciais ainda existem
             })
           })
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
 
           const data = await response.json()
 
