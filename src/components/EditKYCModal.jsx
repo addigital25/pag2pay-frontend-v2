@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { formatCPF, formatCNPJ, formatPhone, formatCEP } from '../utils/formatters'
+import config from '../config'
 
 export default function EditKYCModal({ isOpen, onClose, user, onSave }) {
   const [formData, setFormData] = useState({
@@ -65,7 +66,7 @@ export default function EditKYCModal({ isOpen, onClose, user, onSave }) {
 
     try {
       // Chamar API para salvar dados KYC
-      const response = await fetch(`http://localhost:3001/api/platform/users/${user.id}/edit-kyc`, {
+      const response = await fetch(`${config.apiUrl}/api/platform/users/${user.id}/edit-kyc`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
