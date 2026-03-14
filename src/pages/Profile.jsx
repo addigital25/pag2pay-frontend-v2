@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import AdminLayout from '../components/AdminLayout'
 import { formatCPF, formatPhone, formatCEP } from '../utils/formatters'
+import config from '../config'
 
 export default function Profile() {
   const { user, updateUser } = useAuth()
@@ -70,7 +71,7 @@ export default function Profile() {
     setSaving(true)
 
     try {
-      const response = await fetch(`http://localhost:3001/api/users/${user.id}`, {
+      const response = await fetch(`${config.apiUrl}/api/users/${user.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
